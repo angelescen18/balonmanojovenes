@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubre el Balonmano</title>
+    <meta name="theme-color" content="#FF5A5F">
+    
+    <!-- PWA Manifest Inline -->
+    <link rel="manifest" id="manifest-placeholder">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= VARIABLES Y RESET (Nueva Paleta: Coral, Azul, Lima y Oro) ================= */
+        :root {
+            --primary: #FF5A5F;    /* Coral brillante */
+            --secondary: #3D5A80;  /* Azul pizarra oscuro */
+            --tertiary: #98CE00;   /* Verde lima vibrante */
+            --accent1: #E0FBFC;    /* Cian muy claro (fondo) */
+            --accent2: #F7B801;    /* Amarillo dorado */
+            --text-dark: #293241;  /* Azul oscuro casi negro */
+            --font-title: 'Fredoka', sans-serif;
+            --font-body: 'Quicksand', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--accent1);
+            color: var(--text-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-title);
+            text-align: center;
+            color: var(--secondary);
+        }
+
+        section {
+            padding: 4rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ================= ANIMACIONES ================= */
+        @keyframes holoGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ================= ENCABEZADO Y BURBUJA (Nuevo diseño curvo) ================= */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent2));
+            color: white;
+            padding: 5rem 1rem 6rem;
+            text-align: center;
+            clip-path: ellipse(120% 100% at 50% 0%);
+            box-shadow: 0 10px 20px rgba(255, 90, 95, 0.2);
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.15);
+        }
+
+        .badge {
+            background-color: var(--tertiary);
+            color: var(--text-dark);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: inline-block;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+        }
+
+        .guide-container {
+            display: flex;
+            justify-content: center;
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .speech-bubble {
+            background: white;
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            font-weight: 600;
+            font-size: 1.2rem;
+            max-width: 80%;
+            border: 4px dashed var(--primary);
+            text-align: center;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* ================= IDEA CENTRAL (Tarjeta Holográfica Redonda) ================= */
+        .card-holographic {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--tertiary), var(--accent2));
+            background-size: 400% 400%;
+            animation: holoGradient 8s ease infinite;
+            border-radius: 40px;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            transform: translateY(0) scale(1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card-holographic:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .card-holographic h2 { color: white; font-size: 2rem; margin-bottom: 1rem; }
+        .card-holographic .huge-text { font-size: 5.5rem; font-weight: 700; line-height: 1; text-shadow: 4px 4px 0 rgba(0,0,0,0.2); font-family: var(--font-title);}
+        .card-holographic p { font-size: 1.4rem; font-weight: 700; margin-top: 15px; }
+
+        /* ================= DATOS CLAVE (Cuadrícula Escalonada - Double Sided) ================= */
+        .staggered-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            padding-bottom: 2rem;
+        }
+
+        .staggered-grid > div:nth-child(even) {
+            transform: translateY(40px);
+        }
+
+        .flip-card {
+            background-color: transparent;
+            height: 260px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            background-color: white;
+            border: 4px solid;
+        }
+
+        .flip-card-front {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-title);
+        }
+
+        .flip-card-front span { font-size: 3.5rem; margin-bottom: 15px; display: block;}
+        
+        .flip-card-back {
+            transform: rotateY(180deg);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-dark) !important;
+        }
+
+        /* Colores de las tarjetas escalonadas */
+        .card-1 { border-color: var(--primary); } .card-1 .flip-card-front { color: var(--primary); }
+        .card-2 { border-color: var(--secondary); } .card-2 .flip-card-front { color: var(--secondary); }
+        .card-3 { border-color: var(--tertiary); } .card-3 .flip-card-front { color: var(--tertiary); }
+        .card-4 { border-color: var(--accent2); } .card-4 .flip-card-front { color: var(--accent2); }
+
+        /* ================= PASOS (Tourist Cards en fila horizontal) ================= */
+        .horizontal-steps {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            overflow-x: auto;
+            padding: 1rem 0.5rem 2rem;
+            scroll-snap-type: x mandatory;
+        }
+
+        .horizontal-steps::-webkit-scrollbar { height: 8px; }
+        .horizontal-steps::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+
+        .step-card {
+            background: white;
+            min-width: 280px;
+            flex: 1;
+            border-radius: 25px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-top: 8px solid var(--tertiary);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            scroll-snap-align: start;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            border-top-color: var(--primary);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            background: var(--tertiary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-title);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 10px rgba(152, 206, 0, 0.4);
+        }
+
+        .step-card:hover .step-number { background: var(--primary); box-shadow: 0 4px 10px rgba(255, 90, 95, 0.4);}
+        .step-content h3 { margin-bottom: 10px; font-size: 1.6rem; color: var(--secondary);}
+
+        /* ================= EL CAMPO (SVG) ================= */
+        .field-container {
+            background: var(--secondary);
+            border-radius: 30px;
+            padding: 3rem 1.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 15px 30px rgba(61, 90, 128, 0.2);
+            text-align: center;
+        }
+        
+        .field-container h2 { color: white; margin-bottom: 2rem; }
+
+        /* ================= EL PORTERO (Profile Card Apaisada) ================= */
+        .profile-card-horizontal {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: row;
+            margin: 3rem auto;
+            border: 4px solid var(--accent2);
+            transition: all 0.4s ease;
+        }
+
+        .profile-header-side {
+            background: var(--accent2);
+            color: var(--secondary);
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5rem;
+            min-width: 150px;
+            transition: background 0.4s ease;
+        }
+
+        .profile-body-side {
+            padding: 2.5rem 2rem;
+            text-align: left;
+        }
+
+        .profile-body-side h3 {
+            text-align: left;
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .profile-card-horizontal:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
+
+        .profile-card-horizontal:hover .profile-header-side {
+            background: var(--primary);
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 5rem 1.5rem 4rem;
+            margin-top: 6rem;
+            border-top-left-radius: 60px;
+            border-top-right-radius: 60px;
+        }
+
+        footer h2 { color: var(--tertiary); margin-bottom: 1.5rem; }
+        footer p { margin-bottom: 0.5rem; font-size: 1.1rem; }
+        footer .credits { font-size: 0.9rem; opacity: 0.7; margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;}
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .staggered-grid { grid-template-columns: 1fr; gap: 1.5rem; padding-bottom: 0;}
+            .staggered-grid > div:nth-child(even) { transform: none; }
+            .profile-card-horizontal { flex-direction: column; text-align: center; }
+            .profile-header-side { padding: 1.5rem; font-size: 4rem; }
+            .profile-body-side h3 { text-align: center; }
+            header { clip-path: ellipse(150% 100% at 50% 0%); }
+            header h1 { font-size: 2.5rem; }
+            .card-holographic .huge-text { font-size: 4rem; }
+            .horizontal-steps { flex-direction: column; }
+            .step-card { border-top: none; border-left: 8px solid var(--tertiary); flex-direction: row; text-align: left; gap: 1.5rem; padding: 1.5rem;}
+            .step-number { margin-bottom: 0; min-width: 60px;}
+            .step-card:hover { transform: translateX(10px); border-left-color: var(--primary); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO -->
+    <header>
+        <h1>Aventura en la Cancha</h1>
+        <div class="badge">El juego de los pases veloces</div>
+    </header>
+
+    <!-- GUÍA (Burbuja Flotante) -->
+    <div class="guide-container">
+        <div class="speech-bubble" role="status" aria-live="polite">
+            ¡Prepárate para la acción! El balonmano es súper rápido y es el tercer deporte más importante en nuestro país[cite: 2]. <br>
+            ✨ <em>Desliza y descubre sus secretos.</em>
+        </div>
+    </div>
+
+    <!-- IDEA CENTRAL (Tarjeta Holográfica Ovalada) -->
+    <section>
+        <div class="card-holographic">
+            <h2>LA MISIÓN PRINCIPAL</h2>
+            <div class="huge-text">¡GOL!</div>
+            <p>La meta principal es lanzar la pelota dentro del arco del equipo contrario para sumar la mayor cantidad de puntos posibles[cite: 2].</p>
+        </div>
+    </section>
+
+    <!-- DATOS CLAVE (Cuadrícula Escalonada Double-Sided) -->
+    <section>
+        <h2>Curiosidades del Juego</h2>
+        <div class="staggered-grid">
+            <!-- Tarjeta 1 -->
+            <div class="flip-card card-1" tabindex="0">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span>👕</span>
+                        Los Equipos
+                    </div>
+                    <div class="flip-card-back">
+                        <p>Cada equipo cuenta con <strong>7 participantes</strong> en la pista, aunque en sus inicios se jugaba con 11, ¡igual que en el fútbol![cite: 2].</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta 2 -->
+            <div class="flip-card card-2" tabindex="0">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span>⏳</span>
+                        El Tiempo
+                    </div>
+                    <div class="flip-card-back">
+                        <p>Los partidos se dividen en <strong>dos mitades de 30 minutos</strong> cada una, con una pausa de 10 minutos para recuperar energía[cite: 2].</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta 3 -->
+            <div class="flip-card card-3" tabindex="0">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span>🖐️</span>
+                        La Pelota
+                    </div>
+                    <div class="flip-card-back">
+                        <p>Se fabrica de cuero y el secreto para controlarlo es agarrarlo con fuerza usando solo <strong>las puntas de los dedos</strong>[cite: 2].</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta 4 -->
+            <div class="flip-card card-4" tabindex="0">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span>🟨</span>
+                        Juego Limpio
+                    </div>
+                    <div class="flip-card-back">
+                        <p>Hay dos árbitros cuidando todo. Si alguien rompe las reglas, puede ser castigado <strong>saliendo 2 minutos</strong> del campo, o incluso expulsado[cite: 2].</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PASOS PARA ANOTAR (Tarjetas horizontales) -->
+    <section>
+        <h2>3 Formas Épicas de Lanzar</h2>
+        <div class="horizontal-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Pie Firme</h3>
+                    <p>El jugador deja al menos un pie apoyado en el piso, lo que le permite engañar al rival antes de lanzar[cite: 2].</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Tiro Escondido</h3>
+                    <p>Se lanza desde la altura de la cadera para esconder la pelota y tomar por sorpresa al guardameta desde abajo[cite: 2].</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>El Vuelo</h3>
+                    <p>Consiste en dar un gran salto para lanzar la pelota desde el aire (en suspensión), pasando por encima de toda la defensa[cite: 2].</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EL CAMPO (SVG) -->
+    <section>
+        <div class="field-container">
+            <h2>El Terreno de Juego</h2>
+            <svg viewBox="0 0 400 200" width="100%" height="auto" style="background:#3D5A80; border: 4px solid var(--accent1); border-radius: 15px;">
+                <!-- Línea central -->
+                <line x1="200" y1="0" x2="200" y2="200" stroke="white" stroke-width="2"/>
+                <!-- Círculo central -->
+                <circle cx="200" cy="100" r="20" stroke="white" stroke-width="2" fill="none"/>
+                <!-- Área izquierda 6m -->
+                <path d="M0 40 A60 60 0 0 1 60 100 A60 60 0 0 1 0 160" fill="#E0FBFC" opacity="0.2" stroke="white" stroke-width="2"/>
+                <!-- Área derecha 6m -->
+                <path d="M400 40 A60 60 0 0 0 340 100 A60 60 0 0 0 400 160" fill="#E0FBFC" opacity="0.2" stroke="white" stroke-width="2"/>
+                <!-- Líneas de 7m (Penalti) -->
+                <line x1="70" y1="95" x2="70" y2="105" stroke="white" stroke-width="4"/>
+                <line x1="330" y1="95" x2="330" y2="105" stroke="white" stroke-width="4"/>
+                <!-- Textos -->
+                <text x="200" y="190" fill="white" font-size="14" font-family="sans-serif" font-weight="bold" text-anchor="middle">Largo: 40 metros[cite: 2]</text>
+                <text x="15" y="100" fill="white" font-size="14" font-family="sans-serif" font-weight="bold" transform="rotate(-90 15 100)" text-anchor="middle">Ancho: 20 metros[cite: 2]</text>
+            </svg>
+        </div>
+    </section>
+
+    <!-- EL PORTERO (Tarjeta Apaisada con Hover) -->
+    <section>
+        <h2>El Héroe del Equipo</h2>
+        <div class="profile-card-horizontal" tabindex="0">
+            <div class="profile-header-side">
+                🛡️
+            </div>
+            <div class="profile-body-side">
+                <h3>El Guardián del Arco</h3>
+                <p>Es una pieza fundamental para proteger el arco. Necesita ser súper rápido, tener reflejos increíbles, sangre fría y estar siempre atento a las jugadas de todo el campo[cite: 2].</p>
+                <br>
+                <p>Su momento más épico es defender los tiros de penalti, donde se enfrenta cara a cara al lanzador desde los 7 metros[cite: 2].</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h2>¡A jugar!</h2>
+        <p><strong>Diseñado por: Angeles Centeno</strong></p>
+        <p>Universidad Tecnológica del Perú</p>
+        
+        <div class="credits">
+            <p><strong>Fuente de la información:</strong> Basado en el documento de Balonmano coordinado por F.A. Anguís y textos de Carolina G. Miranda[cite: 2].</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS PWA -->
+    <script>
+        const manifestData = {
+            "name": "Descubre el Balonmano",
+            "short_name": "Balonmano",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#E0FBFC",
+            "theme_color": "#FF5A5F",
+            "icons": [{
+                "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='192' height='192'><rect width='24' height='24' fill='%23FF5A5F'/><circle cx='12' cy='12' r='8' fill='%23FFF'/></svg>",
+                "sizes": "192x192",
+                "type": "image/svg+xml"
+            }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+
+        const swCode = `
+            self.addEventListener('install', (e) => { self.skipWaiting(); });
+            self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+            self.addEventListener('fetch', (e) => {
+                e.respondWith(fetch(e.request).catch(() => new Response('App Offline Mode')));
+            });
+        `;
+        const swBlob = new Blob([swCode], {type: 'application/javascript'});
+        const swURL = URL.createObjectURL(swBlob);
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register(swURL).catch(err => console.log('SW fallback error', err));
+        }
+    </script>
+</body>
+</html>
